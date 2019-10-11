@@ -4,11 +4,18 @@ namespace App\Models;
 
 use App\Models\Booking;
 use App\Models\Blog;
+use App\Models\Comment;
+use App\Models\Rate;
 use App\Models\Contribute;
 use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
+use NotificationChannels\WebPush\HasPushSubscriptions; //import trait
 
+class User extends Model
+{
+    use HasPushSubscriptions;
+    
 class User extends Authenticatable
 {
     use Notifiable;
@@ -42,16 +49,24 @@ class User extends Authenticatable
 
     public function bookings()
     {
-        return $this->hasMany(Booking::class);
+        return $this->hasMany(Booking::class, 'user_id');
     }
 
     public function blogs()
     {
-        return $this->hasMany(Blog::class);
+        return $this->hasMany(Blog::class, 'user_id');
     }
 
     public function contributes()
     {
         return $this->hasMany(Contribute::class);
+    }
+    public function comment()
+    {
+        return $this->hasMany(Comment::class, 'user_id');
+    }
+    public function rate()
+    {
+        return $this->hasMany(Rate::class, 'user_id');
     }
 }
